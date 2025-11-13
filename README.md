@@ -2,7 +2,7 @@
 
 Ekstensi Chrome untuk auto-fill form IPR pada website SINTA menggunakan data JSON.
 
-**By ariefhyda**
+**By [ariefhyda](https://github.com/ariefhyda)**
 
 ## Instalasi
 
@@ -26,15 +26,15 @@ Ekstensi Chrome untuk auto-fill form IPR pada website SINTA menggunakan data JSO
 
 1. Setelah upload JSON, pilih kategori IPR dari dropdown
 2. Pilihan kategori yang tersedia:
-   - Hak Cipta
-   - Paten
-   - Paten Sederhana
-   - Merek
-   - Indikasi Geografis
-   - Desain Industri
-   - Desain Tata Letak Sirkuit Terpadu
-   - Rahasia Dagang
-   - Perlindungan Varietas Tanaman
+   - **Hak Cipta** (aktif)
+   - Paten (tersedia di kode, dapat diaktifkan)
+   - Paten Sederhana (tersedia di kode, dapat diaktifkan)
+   - Merek (tersedia di kode, dapat diaktifkan)
+   - Indikasi Geografis (tersedia di kode, dapat diaktifkan)
+   - Desain Industri (tersedia di kode, dapat diaktifkan)
+   - Desain Tata Letak Sirkuit Terpadu (tersedia di kode, dapat diaktifkan)
+   - Rahasia Dagang (tersedia di kode, dapat diaktifkan)
+   - Perlindungan Varietas Tanaman (tersedia di kode, dapat diaktifkan)
 3. Kategori ini akan digunakan untuk semua entry yang diproses
 
 ### 3. Memulai Auto Fill
@@ -154,26 +154,25 @@ Jika response API memiliki banyak field kosong (>6), ekstensi akan mengisi form 
 ]
 ```
 
-## Membuat Icons
+## Icons
 
-1. Buka file `generate-icons.html` di browser
-2. Klik tombol download untuk setiap icon (icon16.png, icon48.png, icon128.png)
-3. Simpan icon-icon tersebut di folder ekstensi
+Ekstensi ini sudah dilengkapi dengan icons (icon16.png, icon48.png, icon128.png) yang akan ditampilkan di toolbar Chrome. Icons sudah tersedia di folder ekstensi.
 
 ## Fitur
 
 ### Fitur Utama
 
 - **Upload JSON File**: Upload file JSON melalui popup ekstensi
-- **Pilih Kategori IPR**: Pilih kategori IPR dari dropdown (9 pilihan)
+- **Pilih Kategori IPR**: Pilih kategori IPR dari dropdown (Hak Cipta aktif, kategori lain dapat diaktifkan)
 - **Auto Fill Batch**: Proses semua entry secara otomatis tanpa intervensi manual
 - **Start/Stop Control**: Kontrol proses dengan tombol Start dan Stop
-- **Status Indicator**: Indikator status real-time (Running/Idle)
+- **Status Indicator**: Indikator status real-time (Running/Idle) dengan animasi
 - **Progress Info**: Informasi progress jumlah entry yang tersisa
 - **Storage**: Data JSON tersimpan di browser storage dan akan digunakan setiap kali popup dibuka
 - **Auto Load**: Ekstensi akan otomatis load data dari storage, atau dari file default (pdki.json) jika tidak ada data di storage
 - **Clear Data**: Hapus data yang sudah di-upload dan kembali ke file default
 - **Validasi**: Validasi format JSON dan struktur data sebelum digunakan
+- **Entry List**: Tampilkan daftar semua entry dari JSON file dengan informasi detail
 
 ### Fitur Tambahan
 
@@ -186,14 +185,16 @@ Jika response API memiliki banyak field kosong (>6), ekstensi akan mengisi form 
 
 ## Catatan Penting
 
-- **File JSON**: Harus berupa array of objects dengan struktur yang sesuai
-- **Halaman SINTA**: Extension hanya bekerja di halaman SINTA IPR (iprs dan ipradd)
-- **Browser Storage**: Data yang di-upload akan tersimpan di browser storage (local storage)
-- **Icons**: Jika icons belum dibuat, ekstensi masih bisa digunakan namun tidak akan menampilkan icon di toolbar
-- **File Default**: File default (pdki.json) hanya digunakan jika tidak ada data di storage
+- **File JSON**: Harus berupa array of objects dengan struktur yang sesuai (lihat format di bawah)
+- **Halaman SINTA**: Extension hanya bekerja di halaman SINTA IPR (`/profile/iprs` dan `/profile/ipradd`)
+- **Browser Storage**: Data yang di-upload akan tersimpan di browser storage (local storage) dan persist antar sesi
+- **Icons**: Icons sudah tersedia di folder ekstensi (icon16.png, icon48.png, icon128.png)
+- **File Default**: File default (pdki.json) harus ada di folder ekstensi dan hanya digunakan jika tidak ada data di storage
 - **Kategori**: Kategori yang dipilih akan digunakan untuk semua entry yang diproses
-- **Stop Process**: Proses dapat dihentikan kapan saja dengan klik tombol "Stop"
-- **Error Handling**: Jika terjadi error, proses akan berhenti dan error akan di-log di console
+- **Stop Process**: Proses dapat dihentikan kapan saja dengan klik tombol "Stop" - proses akan berhenti setelah entry saat ini selesai
+- **Error Handling**: Jika terjadi error, proses akan berhenti dan error akan di-log di console browser
+- **Auto Processing**: Setelah klik "Start Auto Fill", popup akan tertutup dan proses berjalan di background
+- **Content Script**: Ekstensi akan otomatis inject content script ke halaman SINTA IPR
 
 ## Troubleshooting
 
@@ -219,9 +220,16 @@ Jika response API memiliki banyak field kosong (>6), ekstensi akan mengisi form 
   - Pastikan field yang diperlukan ada di JSON
   - Check console browser untuk melihat error
 
+## Teknologi
+
+- **Manifest Version**: 3
+- **Permissions**: activeTab, storage, scripting
+- **Host Permissions**: https://sinta.kemdiktisaintek.go.id/*
+- **Content Scripts**: Otomatis di-inject ke halaman SINTA IPR
+
 ## Kontak
 
-**By ariefhyda**
+**By [ariefhyda](https://github.com/ariefhyda)**
 
-Untuk pertanyaan atau masalah, silakan hubungi developer.
+Untuk pertanyaan atau masalah, silakan hubungi developer melalui GitHub.
 
