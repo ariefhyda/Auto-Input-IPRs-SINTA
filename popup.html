@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            width: 420px;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(16, 88, 110, 0.1);
+        }
+        
+        h2 {
+            margin: 0;
+            color: #10586E;
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .author {
+            font-size: 11px;
+            color: #7a8a99;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .section h3 {
+            margin: 0 0 12px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section h3::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: linear-gradient(135deg, #10586E 0%, #4eaac5 100%);
+            border-radius: 2px;
+        }
+        
+        .button-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        #uploadButton {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        
+        #uploadButton:hover:not(:disabled) {
+            background: linear-gradient(135deg, #218838 0%, #1ea080 100%);
+        }
+        
+        #clearButton {
+            background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+            color: white;
+        }
+        
+        #clearButton:hover {
+            background: linear-gradient(135deg, #c82333 0%, #c0392b 100%);
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .file-info {
+            font-size: 11px;
+            color: #6c757d;
+            margin-top: 10px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            word-break: break-all;
+        }
+        
+        .section select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .section select:hover {
+            border-color: #10586E;
+        }
+        
+        .section select:focus {
+            outline: none;
+            border-color: #10586E;
+            box-shadow: 0 0 0 3px rgba(16, 88, 110, 0.1);
+        }
+        
+        .section select:disabled {
+            background: #f8f9fa;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .status-indicator {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+        
+        .status-indicator.running {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border: 2px solid #28a745;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            }
+            50% {
+                box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+            }
+        }
+        
+        .status-indicator.idle {
+            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+            color: #0c5460;
+            border: 2px solid #17a2b8;
+        }
+        
+        .progress-info {
+            font-size: 12px;
+            color: #495057;
+            margin-top: 8px;
+            text-align: center;
+            font-weight: 600;
+            padding: 8px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .entry-list {
+            max-height: 250px;
+            overflow-y: auto;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 12px 0;
+            background: #f8f9fa;
+        }
+        
+        .entry-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .entry-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .entry-list::-webkit-scrollbar-thumb {
+            background: #10586E;
+            border-radius: 10px;
+        }
+        
+        .entry-list::-webkit-scrollbar-thumb:hover {
+            background: #4eaac5;
+        }
+        
+        .entry-item {
+            padding: 12px;
+            margin: 8px 0;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .entry-item:hover {
+            background: #f8f9fa;
+            border-color: #10586E;
+            transform: translateX(4px);
+        }
+        
+        .entry-item.selected {
+            background: linear-gradient(135deg, #10586E 0%, #4eaac5 100%);
+            color: white;
+            border-color: #10586E;
+            box-shadow: 0 4px 8px rgba(16, 88, 110, 0.3);
+        }
+        
+        .entry-title {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+        
+        .entry-details {
+            font-size: 11px;
+            color: #6c757d;
+            line-height: 1.5;
+        }
+        
+        .entry-item.selected .entry-details {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        #startButton {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        
+        #startButton:hover:not(:disabled) {
+            background: linear-gradient(135deg, #218838 0%, #1ea080 100%);
+        }
+        
+        #startButton:disabled {
+            background: #dee2e6;
+            color: #6c757d;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        
+        #startButton:disabled:hover {
+            transform: none;
+        }
+        
+        #stopButton {
+            background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+            color: white;
+            display: none;
+        }
+        
+        #stopButton:hover {
+            background: linear-gradient(135deg, #c82333 0%, #c0392b 100%);
+        }
+        
+        .status {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            display: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status.success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+        
+        .status.error {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+        
+        .status.info {
+            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+            color: #0c5460;
+            border: 2px solid #17a2b8;
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #dee2e6, transparent);
+            margin: 18px 0;
+        }
+        
+        /* Empty state */
+        .entry-list:empty::after {
+            content: '📄 No entries found. Please upload JSON file.';
+            display: block;
+            text-align: center;
+            color: #6c757d;
+            padding: 30px 20px;
+            font-size: 13px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Auto Input HKI - SINTA</h2>
+        <div class="author">By <a href="https://github.com/ariefhyda">ariefhyda</a></div>
+    </div>
+    
+    <div class="section">
+        <h3>Upload JSON File</h3>
+        <div class="file-input-wrapper">
+            <input type="file" id="fileInput" accept=".json" />
+            <div class="button-row">
+                <button id="uploadButton">📁 Choose JSON File</button>
+                <button id="clearButton">🗑️ Clear Data</button>
+            </div>
+        </div>
+        <div id="fileInfo" class="file-info"></div>
+    </div>
+    
+    <div class="section">
+        <h3>Pilih Kategori IPR</h3>
+        <select id="kategoriSelect">
+            <option value="hak cipta">Hak Cipta</option>
+            <!-- <option value="paten">Paten</option>
+            <option value="paten sederhana">Paten Sederhana</option>
+            <option value="merek">Merek</option>
+            <option value="indikasi geografis">Indikasi Geografis</option>
+            <option value="desain industri">Desain Industri</option>
+            <option value="desain tata letak sirkuit terpadu">Desain Tata Letak Sirkuit Terpadu</option>
+            <option value="rahasia dagang">Rahasia Dagang</option>
+            <option value="perlindungan varietas tanaman">Perlindungan Varietas Tanaman</option> -->
+        </select>
+    </div>
+    
+    <div class="section">
+        <div id="statusIndicator" class="status-indicator idle">⚪ Status: Idle</div>
+        <div id="progressInfo" class="progress-info"></div>
+    </div>
+    
+    <div class="section">
+        <div id="entryList" class="entry-list"></div>
+    </div>
+    
+    <div class="button-group">
+        <button id="startButton" disabled>▶️ Start Auto Fill</button>
+        <button id="stopButton">⏹️ Stop</button>
+        <button id="fillButton" disabled style="display: none;">Fill Form</button>
+    </div>
+    
+    <div id="status" class="status"></div>
+    <script src="popup.js"></script>
+</body>
+</html>
+
