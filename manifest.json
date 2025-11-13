@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Auto Input IPRs - SINTA",
   "version": "1.0.0",
-  "description": "Auto fill IPR form on SINTA website from JSON data. By ariefhyda",
+  "description": "Auto fill IPR form on SINTA website from JSON data.",
   "permissions": [
     "activeTab",
     "storage",
